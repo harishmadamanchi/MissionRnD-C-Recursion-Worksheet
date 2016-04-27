@@ -43,6 +43,46 @@ P.S: The Above Problem is just a modified version of a popular BackTracking prob
 */
 
 #include "stdafx.h"
+int validPos(int *board, int N, int row, int col);
+int sniperPlace(int *battlefield, int N, int col);
+
+
+
 int solve_nsnipers(int *battlefield, int n){
+	if (n < 4)
+		return 0;
+	else if (sniperPlace(battlefield, n, 0))
+		return 1;
+	return 0;
+}
+
+
+int validPos(int *battlefield, int N, int row, int left)
+{
+	for (int i = 0; i < left; i++)
+	if (battlefield[row*N + i])
+		return 0;
+	for (int i = row, j = left; i >= 0 && j >= 0; i--, j--)
+	if (battlefield[i*N + j])
+		return 0;
+	for (int i = row, j = left; j >= 0 && i<N; i++, j--)
+	if (battlefield[i*N + j])
+		return 0;
+	return 1;
+}
+int sniperPlace(int *battlefield, int N, int col)
+{
+	if (col >= N)
+		return 1;
+	for (int i = 0; i < N; i++)
+	{
+		if (validPos(battlefield, N, i, col))
+		{
+			battlefield[i*N + col] = 1;
+			if (sniperPlace(battlefield, N, col + 1))
+				return 1;
+			battlefield[i*N + col] = 0;
+		}
+	}
 	return 0;
 }
